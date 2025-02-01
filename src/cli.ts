@@ -77,7 +77,7 @@ program
             }
         } catch (error: any) {
             console.error('❌ Excavation failed:', error.message);
-        }g
+        }
     });
 
 program
@@ -105,6 +105,19 @@ program
             console.log(`🔗 Connected to remote vault: ${name}`);
         } catch (error: any) {
             console.error('❌ Connection failed:', error.message);
+        }
+    });
+
+program
+    .command('unearth')
+    .description('Fetch changes from remote (git fetch)')
+    .argument('[remote]', 'remote name', 'origin')
+    .action(async (remote) => {
+        try {
+            await git.fetch(remote);
+            console.log('🏺 Unearthed changes from remote vault');
+        } catch (error: any) {
+            console.error('❌ Unearthing failed:', error.message);
         }
     });
 
