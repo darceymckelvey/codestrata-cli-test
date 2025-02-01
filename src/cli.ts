@@ -77,7 +77,7 @@ program
             }
         } catch (error: any) {
             console.error('❌ Excavation failed:', error.message);
-        }
+        }g
     });
 
 program
@@ -91,6 +91,20 @@ program
             console.log('🚀 Uplifted changes to remote vault');
         } catch (error: any) {
             console.error('❌ Uplift failed:', error.message);
+        }
+    });
+
+program
+    .command('connect-vault')
+    .description('Connect to remote vault (git remote add)')
+    .argument('<name>', 'remote name')
+    .argument('<url>', 'remote vault URL')
+    .action(async (name, url) => {
+        try {
+            await git.addRemote(name, url);
+            console.log(`🔗 Connected to remote vault: ${name}`);
+        } catch (error: any) {
+            console.error('❌ Connection failed:', error.message);
         }
     });
 
