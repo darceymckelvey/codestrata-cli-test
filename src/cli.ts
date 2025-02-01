@@ -121,4 +121,32 @@ program
         }
     });
 
+program
+    .command('shift-to')
+    .description('Switch to different code layer (git checkout)')
+    .argument('<name>', 'branch name')
+    .action(async (name) => {
+        try {
+            await git.checkout(name);
+            console.log(`🔄 Shifted to stratum: ${name}`);
+        } catch (error: any) {
+            console.error('❌ Shift failed:', error.message);
+        }
+    });
+
+program
+    .command('map-strata')
+    .description('List all code layers (git branch --list)')
+    .action(async () => {
+        try {
+            const branches = await git.branch();
+            console.log('🗺️  Available strata:');
+            branches.all.forEach(branch => {
+                console.log(`  ${branch === branches.current ? '✨' : '📍'} ${branch}`);
+            });
+        } catch (error: any) {
+            console.error('❌ Mapping failed:', error.message);
+        }
+    });
+
 program.parse();
