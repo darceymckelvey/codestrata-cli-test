@@ -1,6 +1,6 @@
 {
   "name": "codestrata-cli",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Geological-themed Git CLI",
   "main": "dist/cli.js",
   "bin": {
