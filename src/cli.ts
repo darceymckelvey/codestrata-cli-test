@@ -155,7 +155,7 @@ program
     .argument('<branch>', 'branch to merge from')
     .action(async (branch) => {
         try {
-            const result = await git.merge([branch]);
+            const result = await git.merge([branch, '--allow-unrelated-histories']);
             if (result.failed) {
                 console.error('⚠️  Fusion conflict detected:', result.conflicts.length, 'conflicts');
                 console.log('Resolve conflicts and fossilize changes');
