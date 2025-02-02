@@ -149,4 +149,22 @@ program
         }
     });
 
+program
+    .command('fuse-strata')
+    .description('Merge code layers (git merge)')
+    .argument('<branch>', 'branch to merge from')
+    .action(async (branch) => {
+        try {
+            const result = await git.merge([branch]);
+            if (result.failed) {
+                console.error('⚠️  Fusion conflict detected:', result.conflicts.length, 'conflicts');
+                console.log('Resolve conflicts and fossilize changes');
+                return;
+            }
+            console.log('🌋 Successfully fused layers:', result.merges);
+        } catch (error: any) {
+            console.error('❌ Fusion failed:', error.message);
+        }
+    });
+
 program.parse();
