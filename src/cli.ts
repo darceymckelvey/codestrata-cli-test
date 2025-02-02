@@ -153,14 +153,14 @@ program
     .command('fuse-strata')
     .description('Merge code layers (git merge)')
     .argument('<branch>', 'branch to merge from')
-    .action(async (branch) => {
+    .option('--allow-unrelated', 'Allow merging unrelated histories')
+    .action(async (branch, options) => {
         try {
-            const result = await git.merge([branch, '--allow-unrelated-histories']);
-            if (result.failed) {
-                console.error('⚠️  Fusion conflict detected:', result.conflicts.length, 'conflicts');
-                console.log('Resolve conflicts and fossilize changes');
-                return;
+            const mergeOptions = ['--no-ff'];
+            if (options.allowUnrelated) {
+                mergeOptions.push('--allow-unrelated-histories');
             }
+            const result = await git.merge([branch, ...mergeOptions]);
             console.log('🌋 Successfully fused layers:', result.merges);
         } catch (error: any) {
             console.error('❌ Fusion failed:', error.message);
