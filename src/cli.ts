@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import { program } from 'commander';
 import { CommitResult, simpleGit, SimpleGit, StatusResult } from 'simple-git';
 
@@ -6,21 +5,24 @@ const git: SimpleGit = simpleGit();
 
 program
     .name('strata')
-    .description('Codestrata CLI for managing StrataVaults')
+    .description('Codestrata CLI')
     .version('1.0.0');
 
+// Initializes a new Git repository using `git init`.
 program
     .command('create-vault')
     .description('Initialize a new StrataVault (git init)')
     .action(async () => {
         try {
             await git.init();
-            console.log('🏛️  New StrataVault created successfully');
+            console.log('New StrataVault created successfully');
         } catch (error: any) {
-            console.error('❌ Vault creation failed:', error.message);
+            console.error('Vault creation failed:', error.message);
         }
     });
 
+// Stages all changes with `git add .` and commits them with `git commit -m <message>`.
+// It checks for changes before committing and informs the user if there's nothing to commit.
 program
     .command('fossilize')
     .description('Preserve code changes (git commit)')
@@ -29,17 +31,18 @@ program
         try {
             const status: StatusResult = await git.status();
             if (!status.staged.length && !status.modified.length) {
-                console.log('ℹ️  No changes to fossilize');
+                console.log('No changes to fossilize');
                 return;
             }
             await git.add('.');
             const result: CommitResult = await git.commit(message);
-            console.log('📦 Fossilized changes:', result.summary);
+            console.log('Fossilized changes:', result.summary);
         } catch (error: any) {
-            console.error('❌ Fossilization failed:', error.message);
+            console.error('Fossilization failed:', error.message);
         }
     });
 
+// Creates a new branch using `git checkout -b <name>`. "Stratum" refers to a branch.
 program
     .command('stratum-shift')
     .description('Create new code layer (git branch)')
@@ -47,12 +50,14 @@ program
     .action(async (name: string) => {
         try {
             await git.checkoutLocalBranch(name);
-            console.log(`🌿 Created new stratum: ${name}`);
+            console.log(`Created new stratum: ${name}`);
         } catch (error: any) {
-            console.error('❌ Stratum shift failed:', error.message);
+            console.error('Stratum shift failed:', error.message);
         }
     });
 
+// Displays the repository status, including modified, untracked, and staged files,
+// using `git status`.
 program
     .command('excavate')
     .description('Check repository status')
@@ -80,6 +85,8 @@ program
         }
     });
 
+// Pushes changes to a remote repository with `git push <remote> <branch>`.
+// Defaults to `origin` and `master`.
 program
     .command('uplift')
     .description('Push changes to remote (git push)')
@@ -88,12 +95,13 @@ program
     .action(async (remote: string, branch: string) => {
         try {
             await git.push(remote, branch);
-            console.log('🚀 Uplifted changes to remote vault');
+            console.log('Uplifted changes to remote vault');
         } catch (error: any) {
-            console.error('❌ Uplift failed:', error.message);
+            console.error('Uplift failed:', error.message);
         }
     });
 
+// Adds a remote repository using `git remote add <name> <url>`.
 program
     .command('connect-vault')
     .description('Connect to remote vault (git remote add)')
@@ -102,12 +110,13 @@ program
     .action(async (name, url) => {
         try {
             await git.addRemote(name, url);
-            console.log(`🔗 Connected to remote vault: ${name}`);
+            console.log(`Connected to remote vault: ${name}`);
         } catch (error: any) {
-            console.error('❌ Connection failed:', error.message);
+            console.error('Connection failed:', error.message);
         }
     });
 
+// Fetches changes from a remote repository using `git fetch <remote>`. Defaults to `origin`.
 program
     .command('unearth')
     .description('Fetch changes from remote (git fetch)')
@@ -115,12 +124,13 @@ program
     .action(async (remote) => {
         try {
             await git.fetch(remote);
-            console.log('🏺 Unearthed changes from remote vault');
+            console.log('Unearthed changes from remote vault');
         } catch (error: any) {
-            console.error('❌ Unearthing failed:', error.message);
+            console.error('Unearthing failed:', error.message);
         }
     });
 
+// Switches to a different branch with `git checkout <name>`.
 program
     .command('shift-to')
     .description('Switch to different code layer (git checkout)')
@@ -128,27 +138,30 @@ program
     .action(async (name) => {
         try {
             await git.checkout(name);
-            console.log(`🔄 Shifted to stratum: ${name}`);
+            console.log(`Shifted to stratum: ${name}`);
         } catch (error: any) {
-            console.error('❌ Shift failed:', error.message);
+            console.error('Shift failed:', error.message);
         }
     });
 
+//  Lists all branches using `git branch --list` and indicates the current branch.
 program
     .command('map-strata')
     .description('List all code layers (git branch --list)')
     .action(async () => {
         try {
             const branches = await git.branch();
-            console.log('🗺️  Available strata:');
+            console.log('Available strata:');
             branches.all.forEach(branch => {
                 console.log(`  ${branch === branches.current ? '✨' : '📍'} ${branch}`);
             });
         } catch (error: any) {
-            console.error('❌ Mapping failed:', error.message);
+            console.error('Mapping failed:', error.message);
         }
     });
 
+//  Merges the specified branch into the current branch using `git merge --no-ff <branch>`.
+//  The `--allow-unrelated` option adds `--allow-unrelated-histories`.
 program
     .command('fuse-strata')
     .description('Merge code layers (git merge)')
@@ -161,24 +174,26 @@ program
                 mergeOptions.push('--allow-unrelated-histories');
             }
             const result = await git.merge([branch, ...mergeOptions]);
-            console.log('🌋 Successfully fused layers:', result.merges);
+            console.log('Successfully fused layers:', result.merges);
         } catch (error: any) {
-            console.error('❌ Fusion failed:', error.message);
+            console.error('Fusion failed:', error.message);
         }
     });
 
+// Stashes current changes using `git stash`.
 program
     .command('preserve')
     .description('Temporarily store changes (git stash)')
     .action(async () => {
         try {
             await git.stash();
-            console.log('💾 Changes preserved in geological storage');
+            console.log('Changes preserved in geological storage');
         } catch (error: any) {
-            console.error('❌ Preservation failed:', error.message);
+            console.error('Preservation failed:', error.message);
         }
     });
 
+//  Deletes a local branch using `git branch -d <name>`.
 program
     .command('erode-strata')
     .description('Delete a code layer (git branch -d)')
@@ -186,12 +201,13 @@ program
     .action(async (name) => {
         try {
             await git.deleteLocalBranch(name);
-            console.log(`🗑️  Eroded stratum: ${name}`);
+            console.log(`Eroded stratum: ${name}`);
         } catch (error: any) {
-            console.error('❌ Erosion failed:', error.message);
+            console.error('Erosion failed:', error.message);
         }
     });
 
+//  Deletes a remote branch using `git push origin --delete <name>`.
 program
     .command('erode-remote-strata')
     .description('Delete a remote code layer (git push origin --delete)')
@@ -199,9 +215,9 @@ program
     .action(async (name) => {
         try {
             await git.push(['origin', '--delete', name]);
-            console.log(`🗑️  Eroded remote stratum: ${name}`);
+            console.log(`Eroded remote stratum: ${name}`);
         } catch (error: any) {
-            console.error('❌ Remote erosion failed:', error.message);
+            console.error('Remote erosion failed:', error.message);
         }
     });
 

@@ -1,7 +1,6 @@
-<<<<<<< HEAD
 # codestrata-cli-test
 =======
-# Codestrata CLI 🏛️
+# Codestrata CLI
 
 A geological-themed Git CLI that transforms your version control experience. Instead of git commands, use intuitive geological terms to manage your code layers!
 
@@ -118,10 +117,3 @@ If you encounter any issues:
 1. Check the command help with `strata --help`
 2. Use `strata [command] --help` for specific command details
 3. Open an issue on GitHub
-
-## Upcoming Features
-- More geological-themed commands
-- Enhanced error handling
-- Interactive fossiling (committing)
-- Stratum visualization
->>>>>>> master
